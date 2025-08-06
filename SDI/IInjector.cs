@@ -18,7 +18,5 @@ namespace SDI
 
         public IDependency? GetDependency<DEPENDENCY>();
         public IDependency? GetDependency(Type type);
-
-        public IDependency? GetSingletonDependency(Type type);
     }
 }

@@ -139,7 +139,14 @@ namespace SDI
             // Singleton has to check parent Injector
             if (dependencyInfo.Scope == DependencyScope.Singleton)
             {
-                return GetSingletonDependency(type);
+                if (Parent != null)
+                {
+                    var parentDependency = Parent.GetDependency(type);
+                    if (parentDependency != null && parentDependency.InstanceScope != DependencyScope.Transient)
+                    {
+                        return parentDependency;
+                    }
+                }
             }
 
             // Make dependency
@@ -149,30 +156,6 @@ namespace SDI
             {
                 Instances.Add(type, dependency);
             }
-            return dependency;
-        }
-
-        public IDependency? GetSingletonDependency(Type type)
-        {
-            if (Parent != null)
-            {
-                var result = Parent.GetSingletonDependency(type);
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-
-            DependencyInfo? optionalDependencyInfo = Dependencies.GetValueOrDefault(type);
-
-            if (!optionalDependencyInfo.HasValue)
-            {
-                return null;
-            }
-
-            // Make dependency
-            var dependency = optionalDependencyInfo.Value.CreateDependency(this);
-            Instances.Add(type, dependency);
             return dependency;
         }
     }
