@@ -1,0 +1,23 @@
+name: Build DotNet package
+on:
+  push:
+    branches:
+      - "*"
+    tags:
+      - v*
+
+jobs:
+  Deploy-Package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup DotNet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Install dependencies
+        run: dotnet restore
+        working-directory: ./SDI
+      - name: Build
+        run: dotnet build --configuration Release
+        working-directory: ./SDI
