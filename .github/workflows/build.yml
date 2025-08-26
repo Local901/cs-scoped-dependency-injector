@@ -21,3 +21,9 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
         working-directory: ./SDI
+      - name: Package project
+        run: dotnet pack --configuration Release
+        working-directory: ./SDI
+      - name: Publish package
+        run: dotnet nuget push bin/Release/*.nupkg --source https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }}
+        working-directory: ./SDI
